@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pipeline Iniciado</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+</head>
+<body class="bg-light">
+    <div class="container mt-5">
+        <div class="alert alert-success">
+            <h4 class="alert-heading">EDS SmartArquiteto - Pipeline concluído com sucesso!</h4>
+            <p>Descrição: <strong>{{ descricao }}</strong></p>
+            <p>Planta enviada: <strong>{{ planta }}</strong></p>
+            {% if render_3d_img %}
+            <hr>
+            <div class="mb-3">
+                <strong>Imagem gerada (Stable Diffusion):</strong><br>
+                {% set static_path = render_3d_img.replace('static/', '') %}
+                {% set img_path = 'static/' + static_path %}
+                {% set img_exists = false %}
+                {% if img_path %}
+                    {% set img_exists = (img_path | safe) %}
+                {% endif %}
+                <img src="/{{ render_3d_img }}" alt="Renderização 3D" style="max-width: 400px; border: 1px solid #ccc; margin-top: 8px;"
+                     onerror="this.style.display='none'; document.getElementById('img-erro').style.display='block';">
+                <div id="img-erro" style="display:none; color: #b00; font-weight: bold; margin-top: 8px;">
+                    Imagem não gerada ou arquivo vazio. Verifique a chave da API, limite de uso ou tente novamente.
+                </div>
+            </div>
+            {% endif %}
+            <hr>
+            <p class="mb-2">Arquivos gerados:</p>
+            <ul>
+                <li>Renderização 3D: <code>{{ render_3d }}</code></li>
+                <li>Narração (áudio): <code>{{ audio }}</code></li>
+                <li>Legendas: <code>{{ legendas }}</code></li>
+                <li>Trilha sonora: <code>{{ trilha }}</code></li>
+                <li>Vídeo final: <code>{{ video_final }}</code></li>
+            </ul>
+        </div>
+        <a href="/" class="btn btn-secondary">Novo Projeto</a>
+    </div>
+</body>
+</html>
