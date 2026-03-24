@@ -15,36 +15,36 @@ os.makedirs(UPLOAD_FOLDER, exist_ok=True)
 
 @app.route('/', methods=['GET', 'POST'])
 def index():
-        if request.method == 'POST':
-                    descricao = request.form['descricao']
-                    planta = request.files.get('planta')
-                    planta_path = None
-                    if planta and planta.filename:
-                                    planta_path = os.path.join(UPLOAD_FOLDER, planta.filename)
-                                    planta.save(planta_path)
+    if request.method == 'POST':
+        descricao = request.form['descricao']
+        comodos_texto = request.form.get('comodos', '')
+        planta = request.files.get('planta')
+        planta_path = None
+        if planta and planta.filename:
+            planta_path = os.path.join(UPLOAD_FOLDER, planta.filename)
+            planta.save(planta_path)
 
-                    # Gera imagens por comodo
-                    render_principal, renders = generate_3d_render(descricao, planta_path)
-                    script = generate_narration_script(descricao)
-                    audio = synthesize_voice(script)
-                    legendas = generate_subtitles(script, audio)
-                    trilha = "violao_beethoven.mp3"
-                    video_com_trilha = add_soundtrack(render_principal, trilha)
-                    video_final = assemble_video(video_com_trilha, audio, legendas, trilha)
+        render_principal, renders = generate_3d_render(descricao, comodos_texto)
+        script = generate_narration_script(descricao)
+        audio = synthesize_voice(script)
+        legendas = generate_subtitles(script, audio)
+        trilha = "violao_beethoven.mp3"
+        video_com_trilha = add_soundtrack(render_principal, trilha)
+        video_final = assemble_video(video_com_trilha, audio, legendas, trilha)
 
-            return render_template('sucesso.html',
-                                               descricao=descricao,
-                                               planta=planta.filename if planta else '',
-                                               renders=renders,
-                                               audio=audio,
-                                               legendas=legendas,
-                                               trilha=trilha,
-                                               video_final=video_final)
+        return render_template('sucesso.html',
+            descricao=descricao,
+            planta=planta.filename if planta else '',
+            renders=renders,
+            audio=audio,
+            legendas=legendas,
+            trilha=trilha,
+            video_final=video_final)
     return render_template('index.html')
 
 @app.route('/sucesso')
 def sucesso():
-        return redirect(url_for('index'))
+    return redirect(url_for('index'))
 
 if __name__ == '__main__':
-        app.run(debug=True)
+    app.run(debug=True)
