@@ -1,45 +1,75 @@
 <!DOCTYPE html>
-<html lang="pt-br">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Pipeline Iniciado</title>
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
-</head>
-<body class="bg-light">
-    <div class="container mt-5">
-        <div class="alert alert-success">
-            <h4 class="alert-heading">EDS SmartArquiteto - Pipeline concluído com sucesso!</h4>
-            <p>Descrição: <strong>{{ descricao }}</strong></p>
-            <p>Planta enviada: <strong>{{ planta }}</strong></p>
-            {% if render_3d_img %}
-            <hr>
-            <div class="mb-3">
-                <strong>Imagem gerada (Stable Diffusion):</strong><br>
-                {% set static_path = render_3d_img.replace('static/', '') %}
-                {% set img_path = 'static/' + static_path %}
-                {% set img_exists = false %}
-                {% if img_path %}
-                    {% set img_exists = (img_path | safe) %}
-                {% endif %}
-                <img src="/{{ render_3d_img }}" alt="Renderização 3D" style="max-width: 400px; border: 1px solid #ccc; margin-top: 8px;"
-                     onerror="this.style.display='none'; document.getElementById('img-erro').style.display='block';">
-                <div id="img-erro" style="display:none; color: #b00; font-weight: bold; margin-top: 8px;">
-                    Imagem não gerada ou arquivo vazio. Verifique a chave da API, limite de uso ou tente novamente.
-                </div>
-            </div>
-            {% endif %}
-            <hr>
-            <p class="mb-2">Arquivos gerados:</p>
-            <ul>
-                <li>Renderização 3D: <code>{{ render_3d }}</code></li>
-                <li>Narração (áudio): <code>{{ audio }}</code></li>
-                <li>Legendas: <code>{{ legendas }}</code></li>
-                <li>Trilha sonora: <code>{{ trilha }}</code></li>
-                <li>Vídeo final: <code>{{ video_final }}</code></li>
-            </ul>
-        </div>
-        <a href="/" class="btn btn-secondary">Novo Projeto</a>
-    </div>
-</body>
-</html>
+<html lang="pt-BR">
+    <head>
+            <meta charset="UTF-8">
+            <title>EDS SmartArquiteto - Resultado</title>
+        <style>
+                    body { font-family: Arial, sans-serif; background: #f0f4f0; color: #2d4a2d; padding: 30px; }
+                    h1 { color: #2d6a2d; }
+                    .descricao { background: #d4e8d4; padding: 15px; border-radius: 8px; margin-bottom: 20px; }
+                    .comodos-grid { display: flex; flex-wrap: wrap; gap: 20px; margin: 20px 0; }
+                    .comodo-card {
+                                    background: white;
+                                    border-radius: 10px;
+                                    box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+                                    padding: 15px;
+                                    width: calc(50% - 30px);
+                                    min-width: 280px;
+                    }
+                    .comodo-card h3 { margin: 0 0 10px 0; color: #2d6a2d; text-transform: capitalize; }
+                    .comodo-card img { width: 100%; border-radius: 8px; display: block; }
+                    .comodo-card .no-img { color: #999; font-style: italic; font-size: 13px; }
+                    .arquivos { background: #e8f4e8; padding: 15px; border-radius: 8px; margin-top: 20px; }
+                    .arquivos a { color: #2d6a2d; }
+                    .btn-voltar {
+                                    display: inline-block; margin-top: 20px;
+                                    background: #2d6a2d; color: white;
+                                    padding: 10px 25px; border-radius: 6px;
+                                    text-decoration: none; font-weight: bold;
+                    }
+                    .btn-voltar:hover { background: #1a4a1a; }
+                </style>
+    </head>
+    <body>
+            <h1>EDS SmartArquiteto - Pipeline concluido!</h1>
+    
+        <div class="descricao">
+                <strong>Descricao do projeto:</strong><br>
+                {{ descricao }}
+                {% if planta %}<br><small>Planta enviada: {{ planta }}</small>{% endif %}
+        </div>div>
+    
+        <h2>Imagens geradas por comodo</h2>
+        <div class="comodos-grid">
+                {% for render in renders %}
+                <div class="comodo-card">
+                            <h3>{{ render.label }}</h3>
+                            {% if render.path %}
+                                <img src="{{ url_for('static', filename=render.path.replace('static/', '')) }}"
+                                                         alt="{{ render.label }}"
+                                                         onerror="this.style.display='none'; this.nextElementSibling.style.display='block'">
+                                <p class="no-img" style="display:none;">Imagem nao disponivel.</p>p>
+                            {% else %}
+                                <p class="no-img">Imagem nao gerada.</p>p>
+                            {% endif %}
+                </div>div>
+                {% endfor %}
+        </div>div>
+    
+        <div class="arquivos">
+                <strong>Outros arquivos gerados:</strong>
+                <ul>
+                                <li>Narracao: <a href="#">{{ audio }}</a>a></li>
+                            <li>Legendas: <a href="#">{{ legendas }}</a>a></li>
+                            <li>Trilha sonora: {{ trilha }}</li>
+                            <li>Video final: <a href="#">{{ video_final }}</a>a></li>
+                </ul>
+        </div>div>
+    
+        <a href="/" class="btn-voltar">Gerar novo projeto</a>a>
+    </body>
+</html>html></li></li>
+                </ul></small></strong></h1>
+    </body>
+        </style></title>
+    </head>
